@@ -62,6 +62,7 @@ if (!class_exists('MultiPostThumbnails')) {
 				'post_type' => 'post',
 				'priority' => 'low',
 				'context' => 'side',
+				'required_caps' => null,
 			);
 
 			$args = wp_parse_args($args, $defaults);
@@ -111,7 +112,30 @@ if (!class_exists('MultiPostThumbnails')) {
 		 * @return void
 		 */
 		public function add_metabox() {
-			add_meta_box("{$this->post_type}-{$this->id}", __($this->label, 'multiple-post-thumbnails'), array($this, 'thumbnail_meta_box'), $this->post_type, $this->context, $this->priority);
+			$can_see = true;
+			if ($this->required_caps != null)
+			{
+				$can_see = false;
+				if (!is_array($this->required_caps))
+				{
+					$this->required_caps = array($this->required_caps);
+				}
+
+				foreach ($this->required_caps as $cap) 
+				{
+					if (current_user_can($cap))
+					{
+						$can_see = true;
+						break;
+					}
+				}
+			}
+
+			if ($can_see)
+			{
+				add_meta_box("{$this->post_type}-{$this->id}", __($this->label, 'multiple-post-thumbnails'), array($this, 'thumbnail_meta_box'), $this->post_type, $this->context, $this->priority);
+
+			}
 		}
 
 		/**
