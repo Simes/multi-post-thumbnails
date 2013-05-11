@@ -200,13 +200,15 @@ if (!class_exists('MultiPostThumbnails')) {
 			if ( ! in_array( $hook, array( 'post-new.php', 'post.php', 'media-upload-popup' ) ) )
 				return;
 
+			$plugin = basename(dirname(__FILE__)) . '/' . basename(__FILE__);
+
 			if (version_compare($wp_version, '3.5', '<')) {	
 				add_thickbox();
-				wp_enqueue_script( "mpt-featured-image", $this->plugins_url( 'js/multi-post-thumbnails-admin.js', __FILE__ ), array( 'jquery', 'media-upload' ) );
+				wp_enqueue_script( "mpt-featured-image", plugins_url( 'js/multi-post-thumbnails-admin.js', $plugin ), array( 'jquery', 'media-upload' ) );
 			} else { // 3.5+ media modal
 				wp_enqueue_media();
-				wp_enqueue_script( "mpt-featured-image", $this->plugins_url( 'js/multi-post-thumbnails-admin.js', __FILE__ ), array( 'jquery', 'set-post-thumbnail' ) );
-				wp_enqueue_script( "mpt-featured-image-modal", $this->plugins_url( 'js/media-modal.js', __FILE__ ), array( 'jquery', 'media-models' ) );				
+				wp_enqueue_script( "mpt-featured-image", plugins_url( 'js/multi-post-thumbnails-admin.js', $plugin ), array( 'jquery', 'set-post-thumbnail' ) );
+				wp_enqueue_script( "mpt-featured-image-modal", plugins_url( 'js/media-modal.js', $plugin ), array( 'jquery', 'media-models' ) );				
 			}
 		}
 		
